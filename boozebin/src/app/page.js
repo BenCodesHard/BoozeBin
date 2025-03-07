@@ -13,6 +13,8 @@ const LoadingState = () => (
 );
 
 // Logged in user component (view when logged in)
+// Can either add CRUD functionality right here or add a link to a seperate page (probably easier)
+// This could just be a page with like a small description of app and then link to app functionality
 const LoggedInView = ({ user, onSignOut }) => (
   <div className="flex flex-col gap-4 items-center">
     <p className="text-center font-medium text-white">[DEBUG] {user.email} is currently signed in</p>
@@ -38,6 +40,7 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Look for if there is a user session (logging in)
   useEffect(() => {
     const getUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -56,6 +59,7 @@ export default function Home() {
     };
   }, []);
 
+  // Log out the user
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
