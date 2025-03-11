@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 import PurpleButton from "../components/ui/PurpleButton";
-import IngredientTable from "@/components/IngredientsTable";
+import IngredientTable from "@/components/ui/IngredientsTable";
 
 // Loading state component
 const LoadingState = () => (
