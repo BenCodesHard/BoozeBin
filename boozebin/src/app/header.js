@@ -2,7 +2,8 @@ import Link from 'next/link';
 
 function Header() {
   return (
-    <header className="bg-gradient-to-t from-purple-900 to-black-800 text-white p-4 flex items-center justify-between shadow-md">
+    <header className="fixed top-0 left-0 w-full bg-transparent backdrop-blur-xl
+     text-white p-4 flex items-center justify-between shadow-xl">
       <Link href="/" className="flex items-center">
         <img src="/LogoNoBackground.png" alt="Logo" className="h-10 mr-3 rounded-full" />
         <span className="font-semibold text-xl tracking-tight">BoozeBin</span>
