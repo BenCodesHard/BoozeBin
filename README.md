@@ -1,3 +1,7 @@
+- Team Name: Team Lane 2
+- Project Name: BoozeBin
+- Team Members: Tommy Terry, Ben Sindberg, Sean Archibald, Tyler Wojtiuk
+
 ## **Environment instructions**
 
 *very important will not work without*
