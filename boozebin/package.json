@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "@heroui/react": "^2.7.4",
     "@supabase/supabase-js": "^2.49.1",
     "dotenv": "^16.4.7",
