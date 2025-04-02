@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 import PurpleButton from "../components/ui/PurpleButton";
 import IngredientTable from "@/components/ui/IngredientsTable";
+import DrinkRecommendationService from "@/DrinkRecommendationService";
 
 // Loading state component
 const LoadingState = () => (
@@ -14,14 +15,27 @@ const LoadingState = () => (
 );
 
 // Logged in user component (view when logged in)
-const LoggedInView = ({ user, onSignOut }) => {
+const LoggedInView = ({ user, onSignOut, handleDrinkRecommendation, children }) => {
   return (
     <div className="flex flex-col gap-4 items-center">
       <p className="text-center font-medium text-white">
         [DEBUG] {user.email} is currently signed in
       </p>
+      <p className="text-center font-medium text-purple-300">
+        The button below will return the drink recommendations for the user, look in console log for output.
+        Whoever is doing the display drink recomendation story needs to take this output and display it in a nice way.
+      </p>
+      <PurpleButton onClick={() => handleDrinkRecommendation(true)}>
+        [DEBUG] Generate Drink Recommendations with fake data
+      </PurpleButton>
+      <PurpleButton onClick={() => handleDrinkRecommendation(false, "cocktail", 5)}>
+        [DEBUG] Generate Drink Recommendations (Cocktails) with real data
+      </PurpleButton>
+      <PurpleButton onClick={() => handleDrinkRecommendation(false, "mocktail", 5)}>
+        [DEBUG] Generate Drink Recommendations (Mocktails) with real data
+      </PurpleButton>
       <PurpleButton onClick={onSignOut}>Sign Out</PurpleButton>
-      <IngredientTable user={user} />
+      {children}
     </div>
   );
 };
@@ -47,6 +61,8 @@ const GuestView = () => (
 export default function Home() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [ingredients, setIngredients] = useState([]); // State to store ingredients
+  const [drinkRecommendations, setDrinkRecommendations] = useState([]); // State to store drink recommendations
 
   // Look for if there is a user session (logging in)
   useEffect(() => {
@@ -76,6 +92,23 @@ export default function Home() {
     await supabase.auth.signOut();
   };
 
+  // Handle drink recommendation button click and call DrinkRecommendationService
+  /**
+   * Handles drink recommendations by fetching data from the DrinkRecommendationService
+   * and updating the state with the recommendations.
+   *
+   * @param {Object} FakeOrDealData - The data used to determine whether the drink is fake or real.
+   * @param {string} type - The type of drink to recommend (e.g., "cocktail", "mocktail").
+   * @param {number} quantity - The number of drink recommendations to fetch.
+   * @returns {Promise<void>} A promise that resolves when the recommendations are fetched and set.
+   */
+  const handleDrinkRecommendation = async (FakeOrDealData, type, quantity) => {
+    const drinkRecommendationService = new DrinkRecommendationService();
+    const recommendations = await drinkRecommendationService.getRecommendations(FakeOrDealData, ingredients, type, quantity);
+    console.log(recommendations);
+    setDrinkRecommendations(recommendations);
+  };
+
   return (
     <div
       className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center
@@ -90,7 +123,13 @@ export default function Home() {
         {loading ? (
           <LoadingState />
         ) : user ? (
-          <LoggedInView user={user} onSignOut={handleSignOut} />
+          <LoggedInView
+            user={user}
+            onSignOut={handleSignOut}
+            handleDrinkRecommendation={handleDrinkRecommendation}
+          >
+            <IngredientTable user={user} onIngredientsChange={setIngredients} />
+          </LoggedInView>
         ) : (
           <GuestView />
         )}

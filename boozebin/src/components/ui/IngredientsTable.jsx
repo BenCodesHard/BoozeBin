@@ -5,7 +5,7 @@ import supabase from "@/supabaseClient";
 import PurpleButton from "./PurpleButton";
 import FormInput from "./FormInput";
 
-const IngredientTable = ({ user }) => {
+const IngredientTable = ({ user, onIngredientsChange }) => {
   const [ingredient, setIngredient] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +15,13 @@ const IngredientTable = ({ user }) => {
   useEffect(() => {
     fetchIngredients();
   }, [user?.email]);
+
+  // Update the parent component whenever ingredients change
+  useEffect(() => {
+    if (onIngredientsChange) {
+      onIngredientsChange(ingredients);
+    }
+  }, [ingredients, onIngredientsChange]);
 
   // Function to fetch ingredients from Supabase
   const fetchIngredients = async () => {

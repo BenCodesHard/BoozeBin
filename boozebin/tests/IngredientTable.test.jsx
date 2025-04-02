@@ -9,7 +9,7 @@ jest.mock('@/supabaseClient', () => {
   };
 });
 
-import IngredientTable from './IngredientsTable.jsx';
+import IngredientTable from '../src/components/ui/IngredientsTable.jsx';
 // Import the mocked client
 import supabase from '@/supabaseClient';
 
@@ -247,12 +247,5 @@ describe('IngredientTable Component', () => {
 
     // Verify delete was called
     expect(deleteWasCalled).toBe(true);
-
-    // Check for "No ingredients" message
-    //const noIngredientsMessage = screen.queryByText('No ingredients added yet');
-    //expect(noIngredientsMessage).toBeInTheDocument();
-
-    // Check that Apple text is gone
-    // We need to be more precise about which "Apple" text we're looking for
   });
 });

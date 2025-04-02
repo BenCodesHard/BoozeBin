@@ -2,7 +2,7 @@
 // app/components/FormInput.test.jsx
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import FormInput from './FormInput';
+import FormInput from '../src/components/ui/FormInput.jsx';
 
 describe('FormInput Component', () => {
   test('renders with label and placeholder', () => {

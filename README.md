@@ -14,11 +14,21 @@
 	 - NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 	 - NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
  - Replace `your_supabase_url` and `your_supabase_key` with the URL and key from Supabase
+ - Do the same with the gemini api key found in teams
  - DONE!
- - See .env.example for an example of what your .env file should look like
 
 ## **Build instructions**
 
  - npm install next
 	 - This installs next.js if your system doesn't have it already
  - npm run dev
+
+ **Might need to run these commands also**
+ - npm install supabase
+ - npm install @google/generative-ai
+ - npm install dotenv
+ 
+## **Testing instructions**
+ - npm install jest
+	- This installs jest if your system doesn't have it already
+ - npm test
