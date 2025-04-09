@@ -155,20 +155,21 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
 
   return (
     <div className="w-full max-w-md">
-      <FormInput
-        label="Ingredients"
-        placeholder="Enter ingredient name"
-        value={ingredient}
-        onChange={(e) => setIngredient(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      
-      <div className="flex gap-2 mt-2">
-        <PurpleButton onClick={handleAddIngredient} disabled={isLoading || !ingredient.trim()}>
-          {isLoading ? 'Adding...' : 'Add'}
-        </PurpleButton>
-      </div>
-      
+      <div className="flex gap-2 mb-2">
+  <div className="flex-1 pt-[10px]">
+    <FormInput
+      placeholder="Enter ingredient name"
+      value={ingredient}
+      onChange={(e) => setIngredient(e.target.value)}
+      onKeyPress={handleKeyPress}
+    />
+  </div>
+  <div className="self-stretch flex items-center">
+    <PurpleButton onClick={handleAddIngredient} disabled={isLoading || !ingredient.trim()}>
+      {isLoading ? 'Adding...' : 'Add'}
+    </PurpleButton>
+  </div>
+</div>
       {error && (
         <div className="mt-2 p-2 bg-red-500/20 border border-red-500 rounded-lg">
           <p className="text-red-400">{error}</p>
@@ -185,16 +186,15 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
         ) : (
           <ul className="space-y-2">
             {ingredients.map((item, index) => (
-              <li key={index} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id={`ingredient-${index}`}
-                  className="h-4 w-4 rounded border-gray-300"
-                  onChange={() => handleDeleteIngredient(index)}
-                />
-                <label htmlFor={`ingredient-${index}`} className="text-white cursor-pointer">
-                  {item}
-                </label>
+              <li key={index} className="flex items-center justify-between gap-2">
+                <span className="text-white">{item}</span>
+                <button
+                  onClick={() => handleDeleteIngredient(index)}
+                  className="text-red-500 hover:text-red-700 transition-colors"
+                  aria-label={`Delete ${item}`}
+                >
+                  ✕
+                </button>
               </li>
             ))}
           </ul>

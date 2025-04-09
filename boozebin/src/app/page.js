@@ -6,6 +6,7 @@ import supabase from "../supabaseClient";
 import PurpleButton from "../components/ui/PurpleButton";
 import IngredientTable from "@/components/ui/IngredientsTable";
 import DrinkRecommendationService from "@/DrinkRecommendationService";
+import DrinkRecommendationList from "@/components/ui/DrinkComponent";
 
 // Loading state component
 const LoadingState = () => (
@@ -18,6 +19,7 @@ const LoadingState = () => (
 const LoggedInView = ({ user, onSignOut, handleDrinkRecommendation, children }) => {
   return (
     <div className="flex flex-col gap-4 items-center">
+{/*}
       <p className="text-center font-medium text-white">
         [DEBUG] {user.email} is currently signed in
       </p>
@@ -34,8 +36,11 @@ const LoggedInView = ({ user, onSignOut, handleDrinkRecommendation, children }) 
       <PurpleButton onClick={() => handleDrinkRecommendation(false, "mocktail", 5)}>
         [DEBUG] Generate Drink Recommendations (Mocktails) with real data
       </PurpleButton>
-      <PurpleButton onClick={onSignOut}>Sign Out</PurpleButton>
+      <PurpleButton onClick={onSignOut}>Sign Out</PurpleButton> 
+*/}
       {children}
+      <PurpleButton onClick={onSignOut}>Sign Out</PurpleButton> 
+
     </div>
   );
 };
@@ -112,14 +117,14 @@ export default function Home() {
   return (
     <div
       className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center
-     min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]"
+     min-h-screen p-8 pb-20 gap-4 sm:p-20 font-[family-name:var(--font-geist-sans)]"
       style={{
         backgroundImage: 'url("/backgroundBooze.jpg")',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
       }}
     >
-      <main className="flex flex-col gap-8 row-start-2 items-center">
+      <main className="flex flex-col gap-8 row-start-2 w-full">
         {loading ? (
           <LoadingState />
         ) : user ? (
@@ -128,7 +133,15 @@ export default function Home() {
             onSignOut={handleSignOut}
             handleDrinkRecommendation={handleDrinkRecommendation}
           >
+            {drinkRecommendations.length > 0 && (
+              <DrinkRecommendationList drinkRecommendations={drinkRecommendations} />)
+            }
+            <div className="flex gap-4 justify-center">
+            <PurpleButton onClick={() => handleDrinkRecommendation(false, "cocktail", 5)}>
+            Generate
+      </PurpleButton>
             <IngredientTable user={user} onIngredientsChange={setIngredients} />
+            </div>
           </LoggedInView>
         ) : (
           <GuestView />
