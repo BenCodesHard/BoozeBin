@@ -134,7 +134,8 @@ export default function Home() {
             handleDrinkRecommendation={handleDrinkRecommendation}
           >
             {drinkRecommendations.length > 0 && (
-              <DrinkRecommendationList drinkRecommendations={drinkRecommendations} />)
+              // CHANGE HERE: Added user prop to DrinkRecommendationList
+              <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />)
             }
             <div className="flex gap-4 justify-center">
             <PurpleButton onClick={() => handleDrinkRecommendation(false, "cocktail", 5)}>
