@@ -1,10 +1,8 @@
-// components/ui/SavedDrinksList.js
 "use client";
 
 import React from "react";
 import { Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { ScrollShadow } from "@heroui/react";
 
 const SavedDrink = ({ drink, onRemove }) => {
   return (
@@ -48,7 +46,7 @@ const SavedDrink = ({ drink, onRemove }) => {
 
 const SavedDrinksList = ({ drinks, onRemoveDrink }) => {
   return (
-    <div className="flex flex-col gap-6 p-6 bg-[#0f0f1f] max-h-[650px] overflow-y-auto rounded-xl w-full items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="flex flex-col gap-6 p-6 bg-[#0f0f1f]/90 max-h-[650px] overflow-y-auto rounded-xl w-full items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {drinks.map((drink, index) => (
         <SavedDrink 
           key={index} 

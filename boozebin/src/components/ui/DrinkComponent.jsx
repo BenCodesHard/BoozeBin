@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Card } from "@heroui/react";
 import { ScrollShadow } from "@heroui/react";
-import supabase from "../../supabaseClient"; // Adjust this path to match your actual supabase client import
+import supabase from "@/supabaseClient"; 
 
 const DrinkRecommendation = ({ drinkRecommendation, user }) => {
   const [favorited, setFavorited] = useState(false);

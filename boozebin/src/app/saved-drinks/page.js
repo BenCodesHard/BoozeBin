@@ -1,4 +1,3 @@
-// app/saved-drinks/page.js
 "use client";
 
 import { useEffect, useState } from "react";
@@ -119,48 +118,51 @@ export default function SavedDrinks() {
 
   return (
     <div
-      className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center
-      min-h-screen p-8 pb-20 gap-4 sm:p-20 font-[family-name:var(--font-geist-sans)]"
+      className="min-h-screen font-[family-name:var(--font-geist-sans)]"
       style={{
         backgroundImage: 'url("/backgroundBooze.jpg")',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
       }}
     >
-      <NavigationDropdown 
-        onSignOut={handleSignOut}
-        isLoggedIn={!!user}
-      />
-      
-      <main className="flex flex-col gap-8 row-start-2 w-full max-w-5xl">
-        {loading ? (
-          <LoadingState />
-        ) : user ? (
-          <>
-            <div className="text-center mb-6">
-              <h1 className="text-3xl font-bold text-white mb-2">My Saved Drinks</h1>
-              <p className="text-purple-300">
-                {savedDrinks.length > 0 
-                  ? `You have ${savedDrinks.length} saved drink${savedDrinks.length !== 1 ? 's' : ''}.`
-                  : "You don't have any saved drinks yet."}
-              </p>
-            </div>
-            {savedDrinks.length > 0 ? (
-              <SavedDrinksList drinks={savedDrinks} onRemoveDrink={handleRemoveDrink} />
-            ) : (
-              <div className="text-center text-white p-8 bg-[#1a1a2e]/70 rounded-xl">
-                <p>You haven't saved any drinks yet.</p>
-                <p className="mt-2">Go back to the home page to discover and save some drinks!</p>
-                <PurpleButton href="/" className="mt-4">Discover Drinks</PurpleButton>
+      <div className="min-h-screen p-8 pb-20 sm:p-20 grid grid-rows-[auto_1fr_auto]">
+        <NavigationDropdown 
+          onSignOut={handleSignOut}
+          isLoggedIn={!!user}
+        />
+        
+        <main className="flex flex-col gap-8 w-full max-w-5xl mx-auto my-8">
+          {loading ? (
+            <LoadingState />
+          ) : user ? (
+            <>
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold text-white mb-2">My Saved Drinks</h1>
+                <p className="text-purple-300">
+                  {savedDrinks.length > 0 
+                    ? `You have ${savedDrinks.length} saved drink${savedDrinks.length !== 1 ? 's' : ''}.`
+                    : "You don't have any saved drinks yet."}
+                </p>
               </div>
-            )}
-          </>
-        ) : (
-          <GuestView />
-        )}
-      </main>
-      
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
+              {savedDrinks.length > 0 ? (
+                <SavedDrinksList drinks={savedDrinks} onRemoveDrink={handleRemoveDrink} />
+              ) : (
+                <div className="text-center text-white p-8 bg-[#1a1a2e]/70 rounded-xl">
+                  <p>You haven't saved any drinks yet.</p>
+                  <p className="mt-2">Go back to the home page to discover and save some drinks!</p>
+                  <PurpleButton href="/" className="mt-4">Discover Drinks</PurpleButton>
+                </div>
+              )}
+            </>
+          ) : (
+            <GuestView />
+          )}
+        </main>
+        
+        <footer className="flex gap-6 flex-wrap items-center justify-center"></footer>
+      </div>
     </div>
   );
 }

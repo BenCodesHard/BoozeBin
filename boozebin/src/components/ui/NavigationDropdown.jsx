@@ -1,4 +1,3 @@
-// components/ui/NavigationDropdown.js
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
