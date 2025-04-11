@@ -29,6 +29,28 @@ const GeneratingDrinksState = () => (
 // Logged in user component (view when logged in)
 const LoggedInView = ({ user, handleDrinkRecommendation, isGenerating, children }) => {
   return (
+
+
+    /*   Placeholder just in case it is needed later
+      <p className="text-center font-medium text-white">
+        [DEBUG] {user.email} is currently signed in
+      </p>
+      <p className="text-center font-medium text-purple-300">
+        The button below will return the drink recommendations for the user, look in console log for output.
+        Whoever is doing the display drink recomendation story needs to take this output and display it in a nice way.
+      </p>
+      <PurpleButton onClick={() => handleDrinkRecommendation(true)}>
+        [DEBUG] Generate Drink Recommendations with fake data
+      </PurpleButton>
+      <PurpleButton onClick={() => handleDrinkRecommendation(false, "cocktail", 5)}>
+        [DEBUG] Generate Drink Recommendations (Cocktails) with real data
+      </PurpleButton>
+      <PurpleButton onClick={() => handleDrinkRecommendation(false, "mocktail", 5)}>
+        [DEBUG] Generate Drink Recommendations (Mocktails) with real data
+      </PurpleButton>
+      <PurpleButton onClick={onSignOut}>Sign Out</PurpleButton> 
+*/
+
     <div className="flex flex-col gap-6 items-center w-full">
       {isGenerating ? (
         <GeneratingDrinksState />
