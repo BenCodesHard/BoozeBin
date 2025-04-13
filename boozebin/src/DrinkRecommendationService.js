@@ -4,7 +4,7 @@ const Ingredient = require('./model/Ingredient');
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_KEY;
 const models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro"];
-const promptTemplate =  `Generate a list of drink recommendations.           
+const promptTemplate = `Generate a list of drink recommendations.           
                         You must return a maximum of @DRINK_AMOUNT@ drink recommendations.
                         You must ONLY use these ingredients in your drink recommendations.
                         If you do not have enough ingredients to make a drink 
@@ -19,6 +19,15 @@ const promptTemplate =  `Generate a list of drink recommendations.
                         Try to create fun names for your drink recomendations and make them sound appealing.
                         @DRINK_TYPE@
                         Here is the list of ingredients you can use:`;
+
+// Flexible version – you may add common bar staples
+const promptTemplateFlexible = `Generate a list of drink recommendations.
+You must return a maximum of @DRINK_AMOUNT@ drink recommendations.
+You may use the ingredients provided below **and** any common bar staples (e.g., citrus, simple syrup, bitters, soda) if they improve the drink.
+Avoid exotic or hard to find items unless they’re already in the list.
+If you still can’t make a drink, return an empty array.
+@DRINK_TYPE@
+Primary ingredients:`;
 
 const schema = {
     description: "List of drink recommendations",
@@ -72,7 +81,7 @@ class DrinkRecommendationService {
      * @returns {Promise<DrinkRecommendation[]>} A promise that resolves to an array of drink recommendations.
      * @throws {Error} If any required parameter is missing or invalid.
      */
-    async getRecommendations(fakeData, ingredients, type, amount) {
+    async getRecommendations(fakeData, ingredients, type, amount, allowExtras = false) {
         if (fakeData) {
             // Example data
             const recommendations = [
@@ -108,18 +117,21 @@ class DrinkRecommendationService {
                 const genAI = new GoogleGenerativeAI(apiKey);
                 const ingredientList = ingredients.join(', ');
                 let typeOfRecomendation;
-                if(type === 'cocktail') {
+                if (type === 'cocktail') {
                     typeOfRecomendation = 'Please provide only cocktail and mixed drink recommendations.';
                 }
-                else if(type === 'mocktail') {
+                else if (type === 'mocktail') {
                     typeOfRecomendation = 'Please provide only mocktail drink recommendations.';
                 }
-                else{
+                else {
                     throw new Error('Invalid type. Please specify either "cocktail" or "mocktail".');
                 }
-                const fullPrompt = `${promptTemplate
-                                    .replace('@DRINK_TYPE@', typeOfRecomendation)
-                                    .replace('@DRINK_AMOUNT@', amount)}
+
+                // Rule that tells gemini whether it can add extra ingredients
+                const template = allowExtras ? promptTemplateFlexible : promptTemplate;
+                const fullPrompt = `${template
+                    .replace('@DRINK_TYPE@', typeOfRecomendation)
+                    .replace('@DRINK_AMOUNT@', amount)}
                                     \n${ingredientList}`;
                 /*
                 Due to rate limiting and other issues, this loop tries multiple models to generate the drink recommendations.
@@ -156,13 +168,13 @@ class DrinkRecommendationService {
                         });
 
                         return drinkRecommendations;
-                    } 
+                    }
                     catch (error) {
                         console.warn(`Model ${modelName} failed, trying next model...`, error);
                     }
                 }
                 throw new Error('All models failed to generate drink recommendations.');
-            } 
+            }
             catch (error) {
                 console.error('Error generating drink recommendations:', error);
                 throw error;
