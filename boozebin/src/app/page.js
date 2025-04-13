@@ -84,6 +84,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [ingredients, setIngredients] = useState([]); // State to store ingredients
+  const [allowExtras, setAllowExtras] = useState(false);
   const [drinkRecommendations, setDrinkRecommendations] = useState([]); // State to store drink recommendations
   const [showResults, setShowResults] = useState(false);
 
@@ -125,13 +126,14 @@ export default function Home() {
    * @param {number} quantity - The number of drink recommendations to fetch.
    * @returns {Promise<void>} A promise that resolves when the recommendations are fetched and set.
    */
-  const handleDrinkRecommendation = async (FakeOrDealData, type, quantity) => {
+  const handleDrinkRecommendation = async (FakeOrDealData, type, quantity, allowExtras) => {
+    console.log("extras", allowExtras)
     setIsGenerating(true);
     setDrinkRecommendations([]); // Clear previous recommendations
-    
+
     try {
       const drinkRecommendationService = new DrinkRecommendationService();
-      const recommendations = await drinkRecommendationService.getRecommendations(FakeOrDealData, ingredients, type, quantity);
+      const recommendations = await drinkRecommendationService.getRecommendations(FakeOrDealData, ingredients, type, quantity, allowExtras);
       console.log(recommendations);
       setDrinkRecommendations(recommendations);
       setShowResults(true); // Show the results section after generating
@@ -156,11 +158,11 @@ export default function Home() {
     >
       <div className="min-h-screen p-8 pb-20 sm:p-20 grid grid-rows-[auto_1fr_auto]">
         {/* Add the navigation dropdown with sign out functionality */}
-        <NavigationDropdown 
-          onSignOut={handleSignOut} 
+        <NavigationDropdown
+          onSignOut={handleSignOut}
           isLoggedIn={!!user}
         />
-        
+
         <main className="flex flex-col gap-8 w-full my-8">
           {loading ? (
             <LoadingState />
@@ -174,13 +176,27 @@ export default function Home() {
                 {/* Generate button and title */}
                 <div className="w-full max-w-4xl flex flex-col items-center gap-4">
                   <h2 className="text-xl font-semibold text-white">Find Your Perfect Drink</h2>
-                  <PurpleButton 
-                    onClick={() => handleDrinkRecommendation(false, "cocktail", 5)}
+                  <PurpleButton
+                    onClick={() => {
+                      console.log("ui", allowExtras);
+                      handleDrinkRecommendation(false, "cocktail", 5, allowExtras);
+                    }}
                     className="w-full max-w-md"
                   >
                     Generate Recommendations
                   </PurpleButton>
-                  
+
+                  {/* "Allow other ingredients" toggle */}
+                  <label className="flex items-center gap-2 text-sm text-purple-200">
+                    <input
+                      type="checkbox"
+                      checked={allowExtras}
+                      onChange={() => setAllowExtras(!allowExtras)}
+                      className="h-4 w-4 accent-purple-600"
+                    />
+                    Allow other ingredients
+                  </label>
+
                   {/* Side by side layout after generating */}
                   {showResults ? (
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -189,7 +205,7 @@ export default function Home() {
                         <h3 className="text-lg font-medium text-white mb-3">Your Ingredients</h3>
                         <IngredientTable user={user} onIngredientsChange={setIngredients} />
                       </div>
-                      
+
                       {/* Right side: Drink recommendations */}
                       <div className="bg-[#1a1a2e]/80 p-4 rounded-lg">
                         <h3 className="text-lg font-medium text-white mb-3">Recommendations</h3>
