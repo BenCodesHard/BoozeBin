@@ -61,13 +61,19 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
       setIsLoading(false);
     }
   };
-
-  // Add ingredient to Supabase
+  // Add ingredient to Supabase with optimistic UI update
   const handleAddIngredient = async () => {
     if (!ingredient.trim() || !user?.email) return;
     
+    // Store current input value and clear it immediately for better UX
+    const newIngredient = ingredient;
+    setIngredient(""); // Clear input field immediately
+    
+    // Optimistically update UI
+    const optimisticIngredients = [...ingredients, newIngredient];
+    setIngredients(optimisticIngredients);
+    
     try {
-      setIsLoading(true);
       setError(null);
       
       // First try to get the current data
@@ -82,20 +88,21 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
         if (fetchError.code === 'PGRST116') {
           const { error: insertError } = await supabase
             .from('ingredients')
-            .insert({ email: user.email, stuff: [ingredient] });
+            .insert({ email: user.email, stuff: [newIngredient] });
             
           if (insertError) {
+            // Revert optimistic update on error
+            setIngredients(ingredients);
             setError(`Error creating record: ${insertError.message}`);
-          } else {
-            setIngredients([ingredient]);
-            setIngredient(""); // Clear input field
           }
         } else {
+          // Revert optimistic update on error
+          setIngredients(ingredients);
           setError(`Error fetching current data: ${fetchError.message}`);
         }
       } else {
         // Create new array with current ingredients and new one
-        const updatedIngredients = [...(currentData?.stuff || []), ingredient];
+        const updatedIngredients = [...(currentData?.stuff || []), newIngredient];
         
         // Update Supabase
         const { error: updateError } = await supabase
@@ -104,45 +111,46 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
           .eq('email', user.email);
         
         if (updateError) {
+          // Revert optimistic update on error
+          setIngredients(ingredients);
           setError(`Error updating record: ${updateError.message}`);
-        } else {
-          setIngredients(updatedIngredients);
-          setIngredient(""); // Clear input field
         }
       }
     } catch (err) {
+      // Revert optimistic update on error
+      setIngredients(ingredients);
       setError('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
     }
   };
-
-  // Delete a specific ingredient
+  // Delete a specific ingredient with optimistic UI update
   const handleDeleteIngredient = async (indexToDelete) => {
     if (!user?.email) return;
     
+    // Store current state to revert if needed
+    const originalIngredients = [...ingredients];
+    
+    // Optimistically update UI immediately
+    const updatedIngredients = ingredients.filter((_, index) => index !== indexToDelete);
+    setIngredients(updatedIngredients);
+    
     try {
-      setIsLoading(true);
       setError(null);
       
-      // Remove the specific ingredient
-      const updatedIngredients = ingredients.filter((_, index) => index !== indexToDelete);
-      
-      // Update Supabase
+      // Update Supabase in the background
       const { error } = await supabase
         .from('ingredients')
         .update({ stuff: updatedIngredients })
         .eq('email', user.email);
       
       if (error) {
+        // Revert optimistic update on error
+        setIngredients(originalIngredients);
         setError(`Error updating record: ${error.message}`);
-      } else {
-        setIngredients(updatedIngredients);
       }
     } catch (err) {
+      // Revert optimistic update on error
+      setIngredients(originalIngredients);
       setError('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -185,7 +193,7 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
           <p className="text-white/60">No ingredients added yet</p>
         ) : (
           <ul className="space-y-2">
-            {ingredients.map((item, index) => (
+            {ingredients.sort().map((item, index) => (
               <li key={index} className="flex items-center justify-between gap-2">
                 <span className="text-white">{item}</span>
                 <button
