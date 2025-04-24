@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, ChevronDown, LogOut, Home, GlassWater } from 'lucide-react';
+import { Menu, ChevronDown, LogOut, Home, GlassWater, Camera } from 'lucide-react';
 
 const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +58,17 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
               >
                 <GlassWater size={16} />
                 My Saved Drinks
+              </Link>
+            )}
+            
+            {isLoggedIn && (
+              <Link 
+                href="/image-detection" 
+                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                <Camera size={16} />
+                Image Detection
               </Link>
             )}
             
