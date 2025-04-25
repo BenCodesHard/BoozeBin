@@ -117,7 +117,6 @@ const Page = () => {
     try {
       // Add each ingredient to the user's list
       for (const ingredient of confirmedIngredients) {
-        // Instead of using the hook methods directly, use the separate addIngredient function
         await addIngredientToList(ingredient);
       }
 

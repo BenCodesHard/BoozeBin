@@ -12,7 +12,6 @@ Very important: When identifying alcohol bottles or ingredients, include the spe
 
 For each ingredient, provide:
 1. The complete name of the ingredient including brand name when visible
-2. The position of the ingredient in the image (bounding box coordinates)
 
 Look specifically for:
 - Spirits (vodka, gin, rum, tequila, whiskey, bourbon, etc.) with their brand names
@@ -36,37 +35,9 @@ const schema = {
                 type: SchemaType.STRING,
                 description: "Name of the ingredient",
                 nullable: false,
-            },
-            boundingBox: {
-                type: SchemaType.OBJECT,
-                description: "Position of the ingredient in the image",
-                properties: {
-                    x: {
-                        type: SchemaType.NUMBER,
-                        description: "X coordinate of the top-left corner (0-1 range)",
-                        nullable: false,
-                    },
-                    y: {
-                        type: SchemaType.NUMBER,
-                        description: "Y coordinate of the top-left corner (0-1 range)",
-                        nullable: false,
-                    },
-                    width: {
-                        type: SchemaType.NUMBER,
-                        description: "Width of the bounding box (0-1 range)",
-                        nullable: false,
-                    },
-                    height: {
-                        type: SchemaType.NUMBER,
-                        description: "Height of the bounding box (0-1 range)",
-                        nullable: false,
-                    }
-                },
-                required: ["x", "y", "width", "height"],
-                nullable: false,
             }
         },
-        required: ["name", "boundingBox"],
+        required: ["name"],
     },
 };
 
