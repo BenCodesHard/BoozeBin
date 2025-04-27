@@ -22,6 +22,10 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
     { name: 'Liquor Sampler', path: '/demoImages/sampler2.png' },
     { name: 'Liquor Sampler', path: '/demoImages/sampler3.jpg' },
     { name: 'Titos', path: '/demoImages/titos.jpg' },
+    { name: 'Tupac', path: '/demoImages/Tupac.webp' },
+    { name: 'Liquor Sampler', path: '/demoImages/sampler4.jpg' },
+    { name: 'Juices', path: '/demoImages/Juices.webp' },
+    { name: 'Fruits', path: '/demoImages/Fruits.jpg' },
   ];
 
   // Close demo image gallery when clicking outside
@@ -103,9 +107,9 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* File upload button */}
-        <div className="relative">
+        <div className="relative flex justify-start">
           <input
             type="file"
             ref={fileInputRef}
@@ -124,7 +128,7 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
         </div>
 
         {/* Camera capture button (only on supported devices) */}
-        <div className="relative">
+        <div className="relative flex justify-center">
           <input
             type="file"
             accept="image/*"
@@ -140,14 +144,17 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
         </div>
 
         {/* Demo image button */}
-        <PurpleButton
-          onClick={toggleDemoImages}
-          disabled={isLoading}
-        >
-          <Wine size={16} />
-          <span>Demo Images</span>
-        </PurpleButton>
-      </div>      {/* Demo Images Gallery */}
+        <div className="relative flex justify-end">
+          <PurpleButton
+            onClick={toggleDemoImages}
+            disabled={isLoading}
+          >
+            <Wine size={16} />
+            <span>Demo Images</span>
+          </PurpleButton>
+        </div>
+      </div>
+      {/* Demo Images Gallery */}
       {showDemoImages && (
         <div className="demo-images-container relative bg-[#1a1a2e]/90 p-4 rounded-lg mt-2 border border-purple-800/50 shadow-lg">
           <button 

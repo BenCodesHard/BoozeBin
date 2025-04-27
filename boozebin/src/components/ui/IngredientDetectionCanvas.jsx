@@ -4,8 +4,6 @@ import React from 'react';
 
 /**
  * Simple component for displaying a selected ingredient image.
- * The image is displayed at its natural size without any canvas manipulation, 
- * scrolling or zooming capabilities.
  * 
  * @param {Object} props - Component props
  * @param {string} props.imageSrc - The source of the image (URL or data URL)

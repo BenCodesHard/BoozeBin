@@ -1,5 +1,4 @@
 const { GoogleGenerativeAI, SchemaType } = require("@google/generative-ai");
-const Ingredient = require('./model/Ingredient');
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_KEY;
 const models = ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro"];
@@ -43,12 +42,12 @@ const schema = {
 
 class ImageIngredientDetectionService {
     /**
-     * Detects ingredients from an image
+     * Detects ingredients from an image.
      * 
-     * @param {string} imageData - Base64 encoded image data or image URL
-     * @returns {Promise<Array<{name: string, boundingBox: {x: number, y: number, width: number, height: number}}>>} 
-     *          A promise that resolves to an array of detected ingredients with bounding boxes
-     * @throws {Error} If any required parameter is missing or invalid
+     * @param {string} imageData - Base64 encoded image data or image URL.
+     * @returns {Promise<Array<{name: string}>>}
+     *          A promise that resolves to an array of detected ingredients, each with a name property.
+     * @throws {Error} If imageData is missing or invalid.
      */
     async detectIngredients(imageData) {
         if (!imageData) {
@@ -70,7 +69,7 @@ class ImageIngredientDetectionService {
                         },
                     });
 
-                    // For base64 data that includes the data URL prefix
+                    // base64 image data conversion
                     let imageContent;
                     if (imageData.startsWith('data:')) {
                         imageContent = {
