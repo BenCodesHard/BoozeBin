@@ -10,14 +10,12 @@ import DrinkRecommendationList from "@/components/ui/DrinkComponent";
 import NavigationDropdown from "@/components/ui/NavigationDropdown";
 import { Loader2 } from "lucide-react";
 
-// Loading state component
 const LoadingState = () => (
   <div className="flex justify-center items-center">
     <p className="text-white">Loading...</p>
   </div>
 );
 
-// Generating drinks loading state
 const GeneratingDrinksState = () => (
   <div className="flex flex-col items-center justify-center p-8 bg-[#0f0f1f]/90 rounded-xl w-full max-w-md mx-auto">
     <Loader2 className="h-8 w-8 text-purple-400 animate-spin mb-4" />
@@ -26,17 +24,15 @@ const GeneratingDrinksState = () => (
   </div>
 );
 
-// Logged in user component (view when logged in)
 const LoggedInView = ({ user }) => {
   const [isGenerating, setIsGenerating] = useState(false);
-  const [ingredients, setIngredients] = useState([]); // State to store ingredients
+  const [ingredients, setIngredients] = useState([]);
   const [allowExtras, setAllowExtras] = useState(false);
-  const [isMocktail, setIsMocktail] = useState(false); // State for mocktail preference
-  const [quantity, setQuantity] = useState(5); // State for number of drinks
-  const [drinkRecommendations, setDrinkRecommendations] = useState([]); // State to store drink recommendations
+  const [isMocktail, setIsMocktail] = useState(false);
+  const [quantity, setQuantity] = useState(5);
+  const [drinkRecommendations, setDrinkRecommendations] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  // Handle drink recommendation button click and call DrinkRecommendationService
   const handleDrinkRecommendation = async (IsFakeDrink, type, quantity, allowExtras) => {
     console.log("extras", allowExtras)
     setIsGenerating(true);
@@ -44,10 +40,16 @@ const LoggedInView = ({ user }) => {
 
     try {
       const drinkRecommendationService = new DrinkRecommendationService();
-      const recommendations = await drinkRecommendationService.getRecommendations(IsFakeDrink, ingredients, type, quantity, allowExtras);
+      const recommendations = await drinkRecommendationService.getRecommendations(
+        IsFakeDrink, 
+        ingredients, 
+        type, 
+        quantity, 
+        allowExtras
+      );
       console.log(recommendations);
       setDrinkRecommendations(recommendations);
-      setShowResults(true); // Show the results section after generating
+      setShowResults(true);
     } catch (error) {
       console.error("Error generating drink recommendations:", error);
       alert("There was a problem generating drink recommendations. Please try again.");
@@ -118,7 +120,7 @@ const LoggedInView = ({ user }) => {
                 </p>
               </>
             )}
-          </div>          {/* Always display side by side layout */}
+          </div>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             {/* Left side: Ingredients table */}
             <div className="bg-[#1a1a2e]/80 p-4 rounded-lg">
@@ -144,7 +146,6 @@ const LoggedInView = ({ user }) => {
   );
 };
 
-// Guest user component (view when not logged in)
 const GuestView = () => (
   <div className="flex flex-col gap-4 items-center justify-center">
     <Image
@@ -166,7 +167,6 @@ export default function Home() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Look for if there is a user session (logging in)
   useEffect(() => {
     const getUser = async () => {
       const {
@@ -189,10 +189,10 @@ export default function Home() {
     };
   }, []);
 
-  // Log out the user
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
+
   return (
     <div
       className="min-h-screen font-[family-name:var(--font-geist-sans)]"

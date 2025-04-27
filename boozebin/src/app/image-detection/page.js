@@ -13,19 +13,13 @@ import ImageIngredientDetectionService from '@/ImageIngredientDetectionService';
 import supabase from '@/supabaseClient';
 
 const Page = () => {
-  // User session state
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Image detection states
   const [imageSrc, setImageSrc] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [detectedIngredients, setDetectedIngredients] = useState([]);
-  
-  // Alert notification state
   const [alert, setAlert] = useState({ show: false, message: "", type: "error" });
 
-  // Check for user session on component mount
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -51,7 +45,6 @@ const Page = () => {
     };
   }, []);
 
-  // Setup useIngredients hook for adding ingredients to user's list
   const {
     ingredients,
     isLoading: isIngredientsLoading,
@@ -60,21 +53,18 @@ const Page = () => {
     setIngredient
   } = useIngredients(user);
 
-  // Handle image selection
   const handleImageSelected = (imageSource) => {
     setImageSrc(imageSource);
     setDetectedIngredients([]);
-    
-    // Automatically analyze the image after selection
     analyzeImage(imageSource);
   };
 
-  // Analyze the selected image with Gemini API
   const analyzeImage = async (imageSource) => {
     if (!imageSource) return;
     
     setIsAnalyzing(true);
-    setAlert({ show: false, message: "", type: "error" });    try {
+    setAlert({ show: false, message: "", type: "error" });
+    try {
       const service = new ImageIngredientDetectionService();
       const results = await service.detectIngredients(imageSource);
       
@@ -99,11 +89,10 @@ const Page = () => {
     }
   };
 
-  // Handle removing an ingredient from the detected list
   const handleRemoveIngredient = (index) => {
     setDetectedIngredients(prev => prev.filter((_, i) => i !== index));
   };
-  // Handle adding confirmed ingredients to user's ingredient list
+
   const handleConfirmIngredients = async (confirmedIngredients) => {
     if (!user) {
       setAlert({
@@ -115,7 +104,6 @@ const Page = () => {
     }
 
     try {
-      // Add each ingredient to the user's list
       for (const ingredient of confirmedIngredients) {
         await addIngredientToList(ingredient);
       }
@@ -126,7 +114,6 @@ const Page = () => {
         type: "success"
       });
 
-      // Clear selections but keep the image and detections
       setTimeout(() => {
         setAlert({ show: false, message: "", type: "success" });
       }, 3000);
@@ -164,7 +151,7 @@ const Page = () => {
         // Update existing record
         const updatedIngredients = [...(currentData?.stuff || [])];
         
-        // Only add the ingredient if it's not already in the list
+        // Only add if not already present
         if (!updatedIngredients.includes(ingredientName)) {
           updatedIngredients.push(ingredientName);
           
@@ -180,12 +167,10 @@ const Page = () => {
     }
   };
 
-  // Log out the user
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
 
-  // Loading state component
   const LoadingState = () => (
     <div className="flex justify-center items-center">
       <Loader2 className="animate-spin text-purple-500 h-8 w-8" />
@@ -193,7 +178,6 @@ const Page = () => {
     </div>
   );
 
-  // Guest view (when not logged in)
   const GuestView = () => (
     <div className="flex flex-col gap-4 items-center justify-center">
       <Image
@@ -292,7 +276,8 @@ const Page = () => {
           )}
         </main>
       </div>
-    </div>  );
+    </div>
+  );
 };
 
 export default Page;

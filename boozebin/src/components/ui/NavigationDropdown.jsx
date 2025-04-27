@@ -8,7 +8,6 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -22,7 +21,7 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
     };
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOutClick = () => {
     setIsOpen(false);
     if (onSignOut) onSignOut();
   };
@@ -35,7 +34,10 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
       >
         <Menu size={18} />
         <span className="hidden sm:inline">Menu</span>
-        <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown 
+          size={16} 
+          className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+        />
       </button>
 
       {isOpen && (
@@ -51,35 +53,31 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
             </Link>
             
             {isLoggedIn && (
-              <Link 
-                href="/saved-drinks" 
-                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                <GlassWater size={16} />
-                My Saved Drinks
-              </Link>
-            )}
-            
-            {isLoggedIn && (
-              <Link 
-                href="/image-detection" 
-                className="flex items-center gap-2 px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                <Camera size={16} />
-                Image Detection
-              </Link>
-            )}
-            
-            {isLoggedIn && (
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
-              >
-                <LogOut size={16} />
-                Sign Out
-              </button>
+              <>
+                <Link 
+                  href="/saved-drinks" 
+                  className="flex items-center gap-2 px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <GlassWater size={16} />
+                  My Saved Drinks
+                </Link>
+                <Link 
+                  href="/image-detection" 
+                  className="flex items-center gap-2 px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Camera size={16} />
+                  Image Detection
+                </Link>
+                <button
+                  onClick={handleSignOutClick}
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-white hover:bg-purple-800/50 transition-colors"
+                >
+                  <LogOut size={16} />
+                  Sign Out
+                </button>
+              </>
             )}
           </div>
         </div>

@@ -3,7 +3,7 @@
 import { useIngredients } from "../useIngredients";
 import PurpleButton from "./PurpleButton";
 import FormInput from "./FormInput";
-import Link from 'next/link'; // Import Link for navigation
+import Link from 'next/link';
 
 const IngredientTable = ({ user, onIngredientsChange }) => {
   const {
@@ -16,7 +16,6 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
     handleDeleteIngredient,
   } = useIngredients(user, onIngredientsChange);
 
-  // Handle keypress to allow adding ingredient with Enter key
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && ingredient.trim()) {
       handleAddIngredient();
@@ -35,7 +34,10 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
           />
         </div>
         <div className="self-stretch flex items-center">
-          <PurpleButton onClick={handleAddIngredient} disabled={isLoading || !ingredient.trim()}>
+          <PurpleButton 
+            onClick={handleAddIngredient} 
+            disabled={isLoading || !ingredient.trim()}
+          >
             {isLoading ? 'Adding...' : 'Add'}
           </PurpleButton>
         </div>
