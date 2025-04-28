@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
-import { Card } from "@heroui/react";
+import { Card } from "@/components/ui/card";
 import { ScrollShadow } from "@heroui/react";
 import supabase from "@/supabaseClient"; 
 

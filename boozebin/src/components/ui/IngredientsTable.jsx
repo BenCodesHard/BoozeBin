@@ -3,6 +3,7 @@
 import { useIngredients } from "../useIngredients";
 import PurpleButton from "./PurpleButton";
 import FormInput from "./FormInput";
+import Link from 'next/link';
 
 const IngredientTable = ({ user, onIngredientsChange }) => {
   const {
@@ -15,7 +16,6 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
     handleDeleteIngredient,
   } = useIngredients(user, onIngredientsChange);
 
-  // Handle keypress to allow adding ingredient with Enter key
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && ingredient.trim()) {
       handleAddIngredient();
@@ -34,10 +34,20 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
           />
         </div>
         <div className="self-stretch flex items-center">
-          <PurpleButton onClick={handleAddIngredient} disabled={isLoading || !ingredient.trim()}>
+          <PurpleButton 
+            onClick={handleAddIngredient} 
+            disabled={isLoading || !ingredient.trim()}
+          >
             {isLoading ? 'Adding...' : 'Add'}
           </PurpleButton>
         </div>
+      </div>
+      <div className="text-center mt-2 mb-2">
+        <Link href="/image-detection" passHref>
+          <span className="text-purple-400 hover:text-purple-300 cursor-pointer text-sm underline hover:underline">
+            Have ingredients? Try our image detection!
+          </span>
+        </Link>
       </div>
       {error && (
         <div className="mt-2 p-2 bg-red-500/20 border border-red-500 rounded-lg">
