@@ -1,16 +1,13 @@
 'use client';
 import Link from 'next/link';
-import { Button } from "@heroui/react";
-import supabase from '../../supabaseClient';
+import { Button, Input } from "@heroui/react";
+import supabase from '@/supabaseClient';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import AlertNotification from '@/components/ui/AlertNotification';
+import LogoHeader from '@/components/ui/LogoHeader';
+import Remember from '@/components/ui/Remember';
 
-// Import the reusable components
-import AlertNotification from '../../components/ui/AlertNotification';
-import FormInput from '../../components/ui/FormInput';
-import LogoHeader from '../../components/ui/LogoHeader';
-
-// Login form component
 const LoginForm = ({ 
   email, 
   setEmail, 
@@ -22,25 +19,51 @@ const LoginForm = ({
   onSubmit 
 }) => (
   <form className="space-y-6" onSubmit={onSubmit}>
-    <div className="w-full">
-      <FormInput
-        label="Email"
+    <div className="w-full space-y-2">
+      <label className="block text-sm font-medium text-purple-200">
+        Email
+      </label>
+      <Input
         placeholder="your.email@example.com"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        classNames={{
+          input: [
+            "bg-black/40",
+            "text-white",
+            "border",
+            "border-purple-500/50",
+            "focus:border-purple-500",
+            "rounded-lg",
+            "w-full"
+          ]
+        }}
       />
     </div>
     
-    <div className="w-full">
-      <FormInput
-        label="Password"
+    <div className="w-full space-y-2">
+      <label className="block text-sm font-medium text-purple-200">
+        Password
+      </label>
+      <Input
         placeholder="••••••••"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        classNames={{
+          input: [
+            "bg-black/40",
+            "text-white",
+            "border",
+            "border-purple-500/50",
+            "focus:border-purple-500",
+            "rounded-lg",
+            "w-full"
+          ]
+        }}
       />
     </div>
     
@@ -55,14 +78,14 @@ const LoginForm = ({
           onChange={() => setRememberMe(!rememberMe)}
         />
         <label htmlFor="remember-me" className="ml-2 block text-sm text-purple-200">
-          Remember me <span className="text-xs text-purple-400">(TODO)</span>
+          Remember me
         </label>
       </div>
       
       <div className="text-sm">
-        <a href="#" className="text-purple-400 hover:text-white">
-          TODO: Forgot password? 
-        </a>
+        <Link href="/forgot-password" className="text-purple-400 hover:text-white">
+          Forgot password?
+        </Link>
       </div>
     </div>
     
@@ -79,7 +102,6 @@ const LoginForm = ({
   </form>
 );
 
-// Footer registration link
 const RegisterLink = () => (
   <div className="flex justify-center mt-6">
     <p className="text-purple-200">
@@ -93,25 +115,27 @@ const RegisterLink = () => (
 
 export default function LoginPage() {
   const router = useRouter();
-
-  // variables for the login form
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // variables for form state
   const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('error');
   const [rememberMe, setRememberMe] = useState(false);
 
-  // function to handle the form submission
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('savedEmail');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setShowAlert(false);
     
-    // Form validation
     if (!email || !password) {
       setAlertMessage('Please enter both email and password');
       setAlertType('error');
@@ -121,28 +145,28 @@ export default function LoginPage() {
     }
     
     try {
-      // Authenticate with supabase
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      if (error) {
-        setAlertMessage(error.message);
-        setAlertType('error');
-        setShowAlert(true);
+      if (error) throw error;
+      
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('savedEmail', email);
       } else {
-        setAlertMessage('Login successful!');
-        setAlertType('success');
-        setShowAlert(true);
-        
-        // redirect
-        setTimeout(() => {
-          router.push('/');
-        }, 1500);
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('savedEmail');
       }
+      
+      setAlertMessage('Login successful! Redirecting...');
+      setAlertType('success');
+      setShowAlert(true);
+      
+      setTimeout(() => router.push('/'), 1500);
     } catch (error) {
-      setAlertMessage('An unexpected error occurred. Please try again.');
+      setAlertMessage(error.message || 'An unexpected error occurred');
       setAlertType('error');
       setShowAlert(true);
     } finally {
@@ -150,42 +174,40 @@ export default function LoginPage() {
     }
   };
 
-  // Helper function to dismiss alert after 5 seconds
   useEffect(() => {
     if (showAlert) {
-      const timer = setTimeout(() => {
-        setShowAlert(false);
-      }, 5000);
-      
+      const timer = setTimeout(() => setShowAlert(false), 5000);
       return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-tr from-black via-purple-900 to-black py-8">
-      <div className="shadow-xl px-8 pb-8 pt-12 rounded-xl space-y-8 bg-black/30 backdrop-blur-md border border-purple-500/20 max-w-md w-full">
-        <LogoHeader title="Log In" />
-        
-        <AlertNotification 
-          show={showAlert}
-          message={alertMessage}
-          type={alertType}
-          onClose={() => setShowAlert(false)}
-        />
-        
-        <LoginForm
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          rememberMe={rememberMe}
-          setRememberMe={setRememberMe}
-          isLoading={isLoading}
-          onSubmit={handleLogin}
-        />
-        
-        <RegisterLink />
+    <Remember>
+      <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-tr from-black via-purple-900 to-black py-8">
+        <div className="shadow-xl px-8 pb-8 pt-12 rounded-xl space-y-8 bg-black/30 backdrop-blur-md border border-purple-500/20 max-w-md w-full">
+          <LogoHeader title="Log In" />
+          
+          <AlertNotification 
+            show={showAlert}
+            message={alertMessage}
+            type={alertType}
+            onClose={() => setShowAlert(false)}
+          />
+          
+          <LoginForm
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            rememberMe={rememberMe}
+            setRememberMe={setRememberMe}
+            isLoading={isLoading}
+            onSubmit={handleLogin}
+          />
+          
+          <RegisterLink />
+        </div>
       </div>
-    </div>
+    </Remember>
   );
 }
