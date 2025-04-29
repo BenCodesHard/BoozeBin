@@ -24,6 +24,11 @@ const GeneratingDrinksState = () => (
   </div>
 );
 
+const MESSAGES = {
+  NO_RESULTS: "No recommendations found for your ingredients",
+  CLICK_TO_GENERATE: "Click 'Generate Recommendations' to get drink suggestions",
+};
+
 const LoggedInView = ({ user }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [ingredients, setIngredients] = useState([]);
@@ -135,7 +140,7 @@ const LoggedInView = ({ user }) => {
                 <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />
               ) : (
                 <p className="text-purple-300 text-center">
-                  {showResults ? "No recommendations found for your ingredients" : "Click 'Generate Recommendations' to get drink suggestions"}
+                  {showResults ? MESSAGES.NO_RESULTS : MESSAGES.CLICK_TO_GENERATE}
                 </p>
               )}
             </div>
