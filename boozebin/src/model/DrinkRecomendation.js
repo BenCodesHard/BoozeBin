@@ -3,6 +3,7 @@ class DrinkRecommendation {
      * @param {string} drinkName - The name of the drink.
      * @param {Ingredient[]} ingredients - The list of ingredients required for the drink.
      * @param {string} instructions - The instructions to prepare the drink.
+     * @param {string} [imageUrl] - Optional URL for the drink's image.
      */
     constructor(drinkName, ingredients, instructions) {
         // Validate drinkName is a string

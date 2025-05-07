@@ -9,15 +9,20 @@ import supabase from "@/supabaseClient";
 const apiKey = process.env.NEXT_PUBLIC_UNSPLASHED_KEY;
 
 const fetchUnsplashImage = async (query) => {
-  const storageKey = `drinkImage:${query}`;
-  const cached = localStorage.getItem(storageKey);
+  if (!query || query.toLowerCase().includes("undefined")) return null;
 
+  const storageKey = query.toLowerCase().trim() + "_image";
+  // Check if the image URL is already cached in localStorage
+  const cached = localStorage.getItem(storageKey);
+  const randomIndex = Math.floor(Math.random() * 5) + 1;
+  const keywords = ["cocktail", "drink", "beverage", "fusion"];
+  const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
   if (cached) {
     return cached;
   }
-
+  try {
   const response = await fetch(
-    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&client_id=${apiKey}`
+    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + randomKeyword)}&client_id=${apiKey}&page=${randomIndex}`,
   );
   const data = await response.json();
   const imageUrl = data.results?.[0]?.urls?.regular || null;
@@ -26,6 +31,10 @@ const fetchUnsplashImage = async (query) => {
   }
 
   return imageUrl;
+} catch (error) {
+  console.error("Error fetching image from Unsplash:", error);
+  return null;
+}
 };
 
 const DrinkRecommendation = ({ drinkRecommendation, user }) => {
@@ -33,9 +42,13 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
 
   useEffect(() => {
     const getImage = async () => {
-      const query = drinkRecommendation.drinkName || "cocktail";
+      if(drinkRecommendation.drinkName != null){
+      const query = drinkRecommendation.drinkName;
       const url = await fetchUnsplashImage(query);
+      console.log("Fetched image URL:", url, "for query:", query);
       setImageUrl(url);
+      drinkRecommendation.imageUrl = url;
+      }
     };
     getImage();
   }, [drinkRecommendation]);
@@ -186,7 +199,7 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
         {/* Right side (image) */}
         <div className="w-56 h-56 mt-8 flex-shrink-0 rounded-lg overflow-hidden">
           <img
-            src={imageUrl || "/Cocktails_PLaceHolder.jpg"}
+            src={drinkRecommendation.imageUrl || "/Cocktails_PLaceHolder.jpg"}
             alt={drinkRecommendation.drinkName || "Drink image"}
             className="w-full h-full object-cover"
           />
