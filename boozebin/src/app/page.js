@@ -24,6 +24,11 @@ const GeneratingDrinksState = () => (
   </div>
 );
 
+const MESSAGES = {
+  NO_RESULTS: "No recommendations found for your ingredients",
+  CLICK_TO_GENERATE: "Click 'Generate Recommendations' to get drink suggestions",
+};
+
 const LoggedInView = ({ user }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [ingredients, setIngredients] = useState([]);
@@ -62,7 +67,7 @@ const LoggedInView = ({ user }) => {
     <div className="flex flex-col gap-6 items-center w-full">
       <div className="flex flex-col items-center gap-6 w-full">
         {/* Generate button and title section */}
-        <div className="w-full max-w-4xl flex flex-col items-center gap-4">
+        <div className="w-full max-w-7xl flex flex-col items-center gap-4">
           <h2 className="text-xl font-semibold text-white">Find Your Perfect Drink</h2>
             {/* Controls section - this is where loading state appears */}
           <div className="w-full max-w-md flex flex-col items-center">
@@ -121,21 +126,23 @@ const LoggedInView = ({ user }) => {
               </>
             )}
           </div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          <div className="w-full grid grid-cols-5 gap-6 mt-4">
             {/* Left side: Ingredients table */}
-            <div className="bg-[#1a1a2e]/80 p-4 rounded-lg">
+            <div className="md:col-span-2 bg-[#1a1a2e]/80 p-4 rounded-lg h-[calc(100vh-400px)] flex flex-col">
               <h3 className="text-lg font-medium text-white mb-3">Your Ingredients</h3>
+              <div className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex-1">
               <IngredientTable user={user} onIngredientsChange={setIngredients} />
+              </div>
             </div>
 
             {/* Right side: Drink recommendations */}
-            <div className="bg-[#1a1a2e]/80 p-4 rounded-lg">
+            <div className="h-[calc(100vh-400px)] flex flex-col md:col-span-3 bg-[#1a1a2e]/80 p-4 rounded-lg">
               <h3 className="text-lg font-medium text-white mb-3">Recommendations</h3>
               {drinkRecommendations.length > 0 ? (
                 <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />
               ) : (
                 <p className="text-purple-300 text-center">
-                  {showResults ? "No recommendations found for your ingredients" : "Click 'Generate Recommendations' to get drink suggestions"}
+                  {showResults ? MESSAGES.NO_RESULTS : MESSAGES.CLICK_TO_GENERATE}
                 </p>
               )}
             </div>
@@ -204,7 +211,7 @@ export default function Home() {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <div className="min-h-screen p-8 pb-20 sm:p-20 grid grid-rows-[auto_1fr_auto]">
+      <div className="min-h-screen p-8 pb-20 sm:py-20 px-5 grid grid-rows-[auto_1fr_auto]">
         {/* Add the navigation dropdown with sign out functionality */}
         <NavigationDropdown
           onSignOut={handleSignOut}
