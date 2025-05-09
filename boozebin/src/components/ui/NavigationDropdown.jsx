@@ -27,7 +27,7 @@ const NavigationDropdown = ({ onSignOut, isLoggedIn }) => {
   };
 
   return (
-    <div className="absolute top-4 right-4 z-10" ref={dropdownRef}>
+    <div className="fixed top-4 right-4 z-50" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-1 px-3 py-2 bg-purple-900/80 text-white rounded-md hover:bg-purple-800 transition-colors"

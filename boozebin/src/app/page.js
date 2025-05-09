@@ -126,9 +126,9 @@ const LoggedInView = ({ user }) => {
               </>
             )}
           </div>
-          <div className="w-full grid grid-cols-5 gap-6 mt-4">
+          <div className="w-full grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
             {/* Left side: Ingredients table */}
-            <div className="md:col-span-2 bg-[#1a1a2e]/80 p-4 rounded-lg h-[calc(100vh-400px)] flex flex-col">
+            <div className="md:col-span-2 bg-[#1a1a2e]/80 p-4 rounded-lg flex flex-col max-h-[calc(100vh-400px)] overflow-auto">
               <h3 className="text-lg font-medium text-white mb-3">Your Ingredients</h3>
               <div className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex-1">
               <IngredientTable user={user} onIngredientsChange={setIngredients} />
@@ -136,7 +136,7 @@ const LoggedInView = ({ user }) => {
             </div>
 
             {/* Right side: Drink recommendations */}
-            <div className="h-[calc(100vh-400px)] flex flex-col md:col-span-3 bg-[#1a1a2e]/80 p-4 rounded-lg">
+            <div className="flex flex-col md:col-span-3 bg-[#1a1a2e]/80 p-4 rounded-lg max-h-[calc(100vh-400px)] overflow-auto">
               <h3 className="text-lg font-medium text-white mb-3">Recommendations</h3>
               {drinkRecommendations.length > 0 ? (
                 <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />

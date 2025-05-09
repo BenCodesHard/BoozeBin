@@ -201,7 +201,7 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
           <img
             src={drinkRecommendation.imageUrl || "/Cocktails_PLaceHolder.jpg"}
             alt={drinkRecommendation.drinkName || "Drink image"}
-            className="w-full h-full object-cover"
+            className="hidden lg:block w-full max-w-full h-auto object-contain rounded-lg"
           />
         </div>
       </div>
