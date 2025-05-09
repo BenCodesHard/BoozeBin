@@ -156,7 +156,7 @@ const LoggedInView = ({ user }) => {
 const GuestView = () => (
   <div className="flex flex-col gap-4 items-center justify-center">
     <Image
-      src="/boozebinLogoTransparent.PNG"
+      src="/boozebinLogoTransparent.png"
       alt="Booze Bin logo"
       width={300}
       height={38}
