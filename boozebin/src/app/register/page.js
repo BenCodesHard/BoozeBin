@@ -1,14 +1,14 @@
 'use client';
 import Link from 'next/link';
 import { Button } from "@heroui/react";
-import supabase from '../../supabaseClient';
+import supabase from '@/supabaseClient';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 // Import the reusable components
-import AlertNotification from '../../components/ui/AlertNotification';
-import FormInput from '../../components/ui/FormInput';
-import LogoHeader from '../../components/ui/LogoHeader';
+import AlertNotification from '@/components/ui/AlertNotification';
+import FormInput from '@/components/ui/FormInput';
+import LogoHeader from '@/components/ui/LogoHeader';
 
 // Registration form component
 const RegisterForm = ({ 
@@ -28,55 +28,75 @@ const RegisterForm = ({
   <form className="space-y-6" onSubmit={onSubmit}>
     <div className="grid grid-cols-2 gap-4">
       <div className="w-full">
+        <label htmlFor="firstName" className="block text-sm font-medium text-purple-200 mb-1">
+          First Name
+        </label>
         <FormInput
-          label="First Name"
+          id="firstName"
           placeholder="John"
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          label="" // Remove the label from the FormInput component
         />
       </div>
       <div className="w-full">
+        <label htmlFor="lastName" className="block text-sm font-medium text-purple-200 mb-1">
+          Last Name
+        </label>
         <FormInput
-          label="Last Name"
+          id="lastName"
           placeholder="Doe"
           type="text"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          label="" // Remove the label from the FormInput component
         />
       </div>
     </div>
     
     <div className="w-full">
+      <label htmlFor="email" className="block text-sm font-medium text-purple-200 mb-1">
+        Email
+      </label>
       <FormInput
-        label="Email"
+        id="email"
         placeholder="your.email@example.com"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        label="" // Remove the label from the FormInput component
       />
     </div>
     
     <div className="w-full">
+      <label htmlFor="password" className="block text-sm font-medium text-purple-200 mb-1">
+        Password
+      </label>
       <FormInput
-        label="Password"
+        id="password"
         placeholder="••••••••"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        label="" // Remove the label from the FormInput component
       />
     </div>
     
     <div className="w-full">
+      <label htmlFor="confirmPassword" className="block text-sm font-medium text-purple-200 mb-1">
+        Confirm Password
+      </label>
       <FormInput
-        label="Confirm Password"
+        id="confirmPassword"
         placeholder="••••••••"
         type="password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
+        label="" // Remove the label from the FormInput component
       />
     </div>
     
