@@ -136,7 +136,10 @@ const LoggedInView = ({ user }) => {
             </div>
 
             {/* Right side: Drink recommendations */}
-            <div className="flex flex-col md:col-span-3 bg-[#1a1a2e]/80 p-4 rounded-lg max-h-[calc(100vh-400px)] overflow-auto">
+            <div className=
+              "flex flex-col min-w-0 bg-[#1a1a2e]/80 p-4 rounded-lg
+               max-h-[60vh] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden
+               md:max-h-none md:overflow-visible md:h-[calc(100vh-400px)] md:col-span-3">
               <h3 className="text-lg font-medium text-white mb-3">Recommendations</h3>
               {drinkRecommendations.length > 0 ? (
                 <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />
