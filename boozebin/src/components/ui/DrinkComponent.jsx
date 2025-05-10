@@ -197,11 +197,11 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
           </div>
         </div>
         {/* Right side (image) */}
-        <div className="w-56 h-56 mt-8 flex-shrink-0 rounded-lg overflow-hidden">
+        <div className="hidden lg:block w-56 h-56 mt-8 flex-shrink-0 rounded-lg overflow-hidden">
           <img
             src={drinkRecommendation.imageUrl || "/Cocktails_PLaceHolder.jpg"}
             alt={drinkRecommendation.drinkName || "Drink image"}
-            className="hidden lg:block w-full max-w-full h-auto object-contain rounded-lg"
+            className="w-full h-full object-contain"
           />
         </div>
       </div>
