@@ -109,7 +109,7 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
     <div className="w-full flex flex-col gap-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* File upload button */}
-        <div className="relative flex justify-start">
+        <div className="relative flex justify-center md:justify-start">
           <input
             type="file"
             ref={fileInputRef}
@@ -144,7 +144,7 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
         </div>
 
         {/* Demo image button */}
-        <div className="relative flex justify-end">
+        <div className="relative flex justify-center md:justify-end">
           <PurpleButton
             onClick={toggleDemoImages}
             disabled={isLoading}

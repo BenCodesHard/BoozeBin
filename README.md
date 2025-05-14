@@ -14,8 +14,7 @@
 	 - NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 	 - NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
  - Replace `your_supabase_url` and `your_supabase_key` with the URL and key from Supabase
- - Do the same with the gemini api key found in teams
- - Also need a key for unsplashed its in teams
+ - Do the same with these keys as well (found in teams): Google Gemini and Unsplashed.
  - DONE!
 
 ## **Build instructions**
