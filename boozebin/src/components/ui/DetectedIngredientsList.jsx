@@ -32,14 +32,15 @@ const DetectedIngredientsList = ({
       }
     });
   };
-
   // Handle confirmation of selected ingredients
   const handleConfirm = () => {
     const confirmedIngredients = detectedIngredients
       .filter(ingredient => selectedIngredients.includes(ingredient.name))
       .map(ingredient => ingredient.name);
     
+    // Call parent handler and clear selections
     onConfirmIngredients(confirmedIngredients);
+    setSelectedIngredients([]);
   };
 
   // Select all ingredients

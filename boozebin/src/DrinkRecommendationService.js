@@ -69,47 +69,17 @@ class DrinkRecommendationService {
     /**
      * Generates drink recommendations based on the provided ingredients and type.
      * 
-     * @param {boolean} fakeData - If true, returns mock data instead of calling the API. (Required)
      * @param {string[]} ingredients - List of ingredients to use for drink recommendations.
      * @param {string} type - The type of drink recommendations to generate ('cocktail' or 'mocktail'). (Required)
      * @param {number} amount - The maximum number of drink recommendations to generate. (Required)
      * @param {boolean} allowExtras - Whether common bar staples can be added. Defaults to false.
      * @returns {Promise<DrinkRecommendation[]>} A promise that resolves to an array of drink recommendations.
      * @throws {Error} If any required parameter is missing or invalid.
-     */
-    async getRecommendations(fakeData, ingredients, type, amount, allowExtras = false) {
-        if (fakeData) {
-            // Example data
-            const recommendations = [
-                new DrinkRecommendation(
-                    'Mojito',
-                    [
-                        new Ingredient('Mint Leaves', '10 leaves'),
-                        new Ingredient('White Rum', '50ml'),
-                        new Ingredient('Sugar Syrup', '15ml'),
-                        new Ingredient('Lime Juice', '25ml'),
-                        new Ingredient('Soda Water', 'Top up'),
-                    ],
-                    'Muddle mint leaves with sugar syrup and lime juice. Add rum and ice, then top up with soda water.'
-                ),
-                new DrinkRecommendation(
-                    'Old Fashioned',
-                    [
-                        new Ingredient('Bourbon', '50ml'),
-                        new Ingredient('Sugar Cube', '1 cube'),
-                        new Ingredient('Angostura Bitters', '2 dashes'),
-                        new Ingredient('Orange Peel', '1 twist'),
-                    ],
-                    'Muddle sugar cube with bitters. Add bourbon and ice, then stir. Garnish with orange peel.'
-                ),
-            ];
-            return recommendations;
+     */    async getRecommendations(ingredients, type, amount, allowExtras = false) {
+        if (type === undefined || amount === undefined) {
+            throw new Error("Missing required parameters: type and amount are required.");
         }
-        else {
-            if (fakeData === undefined || type === undefined || amount === undefined) {
-                throw new Error("Missing required parameters: fakeData, type, and amount are required.");
-            }
-            try {
+        try {
                 const genAI = new GoogleGenerativeAI(apiKey);
                 const ingredientList = ingredients.join(', ');
                 let prompt = basePromptTemplate.replace('@DRINK_AMOUNT@', amount);
@@ -181,7 +151,7 @@ class DrinkRecommendationService {
                 throw error;
             }
         }
-    }
 }
+
 
 export default DrinkRecommendationService;

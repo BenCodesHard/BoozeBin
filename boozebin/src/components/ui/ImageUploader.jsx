@@ -26,6 +26,8 @@ const ImageUploader = ({ onImageSelected, isLoading }) => {  const fileInputRef 
     { name: 'Liquor Sampler', path: '/demoImages/sampler4.jpg' },
     { name: 'Juices', path: '/demoImages/Juices.webp' },
     { name: 'Fruits', path: '/demoImages/Fruits.jpg' },
+    { name: 'Soda', path: '/demoImages/Soda.jpg' },
+    { name: 'Soda', path: '/demoImages/Soda2.jpg' },
   ];
 
   // Close demo image gallery when clicking outside

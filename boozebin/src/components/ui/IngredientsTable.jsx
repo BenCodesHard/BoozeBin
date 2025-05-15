@@ -4,8 +4,10 @@ import { useIngredients } from "../useIngredients";
 import PurpleButton from "./PurpleButton";
 import FormInput from "./FormInput";
 import Link from 'next/link';
+import { useState } from 'react';
 
 const IngredientTable = ({ user, onIngredientsChange }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const {
     ingredient,
     setIngredient,
@@ -54,31 +56,50 @@ const IngredientTable = ({ user, onIngredientsChange }) => {
           <p className="text-red-400">{error}</p>
         </div>
       )}
-      {/* Display current ingredients with checkboxes */}
-      <div className="mt-4 p-4 bg-purple-900/30 rounded-lg">
-        <h3 className="text-white font-medium mb-2">Your Ingredients:</h3>
-        {isLoading ? (
-          <p className="text-white/60">Loading ingredients...</p>
-        ) : ingredients.length === 0 ? (
-          <p className="text-white/60">No ingredients added yet</p>
-        ) : (
-          
-          <ul className="space-y-2">
-            {ingredients.sort().map((item, index) => (
-              <li key={index} className="flex items-center justify-between gap-2">
-                <span className="text-white">{item}</span>
-                <button
-                  onClick={() => handleDeleteIngredient(index)}
-                  className="text-red-500 hover:text-red-700 transition-colors"
-                  aria-label={`Delete ${item}`}
-                >
-                  ✕
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
+      
+      {/* Ingredients box with show/hide functionality */}
+      <div className="mt-4 flex items-center justify-between">
+        <h3 className="text-white font-medium">Your Ingredients:</h3>
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-purple-400 hover:text-purple-300 text-sm"
+        >
+          {isCollapsed ? 'Show' : 'Hide'}
+        </button>
       </div>
+      
+      {!isCollapsed && (
+        <div className="mt-2 p-4 bg-purple-900/30 rounded-lg animate-fadeIn">
+          {isLoading && ingredients.length === 0 ? (
+            <p className="text-white/60">Loading ingredients...</p>
+          ) : ingredients.length === 0 ? (
+            <p className="text-white/60">No ingredients added yet</p>
+          ) : (
+            <div className="pr-2">
+              <ul className="space-y-2">
+                {ingredients.sort().map((item, index) => (
+                  <li key={index} className="flex items-center justify-between gap-2 py-1 border-b border-purple-800/30 last:border-b-0 animate-fadeIn">
+                    <span className="text-white truncate">{item}</span>
+                    <button
+                      onClick={() => handleDeleteIngredient(index)}
+                      className="flex-shrink-0 ml-2 text-red-500 hover:text-red-300 transition-colors"
+                      aria-label={`Delete ${item}`}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {isCollapsed && ingredients.length > 0 && (
+        <div className="mt-2 text-white/60 text-sm">
+          {ingredients.length} ingredients added
+        </div>
+      )}
     </div>
   );
 };

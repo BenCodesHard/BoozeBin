@@ -29,16 +29,14 @@ const MESSAGES = {
   CLICK_TO_GENERATE: "Click 'Generate Recommendations' to get drink suggestions",
 };
 
-const LoggedInView = ({ user }) => {
+const LoggedInView = ({ user}) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [allowExtras, setAllowExtras] = useState(false);
   const [isMocktail, setIsMocktail] = useState(false);
   const [quantity, setQuantity] = useState(5);
   const [drinkRecommendations, setDrinkRecommendations] = useState([]);
-  const [showResults, setShowResults] = useState(false);
-
-  const handleDrinkRecommendation = async (IsFakeDrink, type, quantity, allowExtras) => {
+  const [showResults, setShowResults] = useState(false);  const handleDrinkRecommendation = async (type, quantity, allowExtras) => {
     console.log("extras", allowExtras)
     setIsGenerating(true);
     setDrinkRecommendations([]); // Clear previous recommendations
@@ -46,7 +44,6 @@ const LoggedInView = ({ user }) => {
     try {
       const drinkRecommendationService = new DrinkRecommendationService();
       const recommendations = await drinkRecommendationService.getRecommendations(
-        IsFakeDrink, 
         ingredients, 
         type, 
         quantity, 
@@ -67,18 +64,19 @@ const LoggedInView = ({ user }) => {
     <div className="flex flex-col gap-6 items-center w-full">
       <div className="flex flex-col items-center gap-6 w-full">
         {/* Generate button and title section */}
-        <div className="w-full max-w-7xl flex flex-col items-center gap-4">
-          <h2 className="text-xl font-semibold text-white">Find Your Perfect Drink</h2>
-            {/* Controls section - this is where loading state appears */}
+          <div className="w-full max-w-7xl flex flex-col items-center gap-4">
+            <h2 className="text-xl font-semibold text-white">
+              {`Welcome, ${user.identities[0]?.identity_data.first_name || "Guest"}! Find Your Perfect Drink`}
+            </h2>
+              {/* Controls section - this is where loading state appears */}
           <div className="w-full max-w-md flex flex-col items-center">
             {isGenerating ? (
               <GeneratingDrinksState />
             ) : (
-              <>
-                <PurpleButton
+              <>                <PurpleButton
                   onClick={() => {
                     const drinkType = isMocktail ? "mocktail" : "cocktail";
-                    handleDrinkRecommendation(false, drinkType, quantity, allowExtras);
+                    handleDrinkRecommendation(drinkType, quantity, allowExtras);
                   }}
                   className="w-full max-w-md"
                 >
@@ -125,21 +123,15 @@ const LoggedInView = ({ user }) => {
                 </p>
               </>
             )}
-          </div>
-          <div className="w-full grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
+          </div>          <div className="w-full grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
             {/* Left side: Ingredients table */}
-            <div className="md:col-span-2 bg-[#1a1a2e]/80 p-4 rounded-lg flex flex-col max-h-[calc(100vh-400px)] overflow-auto">
+            <div className="md:col-span-2 bg-[#1a1a2e]/80 p-4 rounded-lg flex flex-col self-start">
               <h3 className="text-lg font-medium text-white mb-3">Your Ingredients</h3>
-              <div className="overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] flex-1">
+              <div>
               <IngredientTable user={user} onIngredientsChange={setIngredients} />
               </div>
-            </div>
-
-            {/* Right side: Drink recommendations */}
-            <div className=
-              "flex flex-col min-w-0 bg-[#1a1a2e]/80 p-4 rounded-lg
-               max-h-[60vh] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden
-               md:max-h-none md:overflow-visible md:h-[calc(100vh-400px)] md:col-span-3">
+            </div>            {/* Right side: Drink recommendations */}
+            <div className="flex flex-col min-w-0 bg-[#1a1a2e]/80 p-4 rounded-lg md:col-span-3">
               <h3 className="text-lg font-medium text-white mb-3">Recommendations</h3>
               {drinkRecommendations.length > 0 ? (
                 <DrinkRecommendationList drinkRecommendations={drinkRecommendations} user={user} />

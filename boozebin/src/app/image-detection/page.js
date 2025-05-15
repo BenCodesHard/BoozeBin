@@ -92,7 +92,6 @@ const Page = () => {
   const handleRemoveIngredient = (index) => {
     setDetectedIngredients(prev => prev.filter((_, i) => i !== index));
   };
-
   const handleConfirmIngredients = async (confirmedIngredients) => {
     if (!user) {
       setAlert({
@@ -108,15 +107,16 @@ const Page = () => {
         await addIngredientToList(ingredient);
       }
 
+      // Clear the detected ingredients list after successful addition
+      setDetectedIngredients([]);
+      
+      // Show prominent success message
       setAlert({
         show: true,
         message: `Successfully added ${confirmedIngredients.length} ingredient(s) to your list`,
-        type: "success"
+        type: "success",
+        prominent: true
       });
-
-      setTimeout(() => {
-        setAlert({ show: false, message: "", type: "success" });
-      }, 3000);
     } catch (error) {
       console.error("Error adding ingredients:", error);
       setAlert({
@@ -226,13 +226,18 @@ const Page = () => {
                 <p className="text-purple-300">
                   Upload an image to automatically detect ingredients for your cocktails
                 </p>
-              </div>
-
-              <AlertNotification
+              </div>              <AlertNotification
                 show={alert.show}
                 message={alert.message}
                 type={alert.type}
-                onClose={() => setAlert({ ...alert, show: false })}
+                prominent={alert.prominent}
+                onClose={() => {
+                  setAlert({ show: false, message: "", type: "success" });
+                  if (alert.prominent && alert.type === 'success') {
+                    // If this was a successful ingredients add, reset the image state too
+                    setImageSrc(null);
+                  }
+                }}
               />
 
               <div className="bg-[#1a1a2e]/80 p-6 rounded-lg shadow-lg">
