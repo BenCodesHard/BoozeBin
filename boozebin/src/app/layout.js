@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata = { //Tab header
   title: "BoozeBin",
   description: "Find your perfect drink",
 };
