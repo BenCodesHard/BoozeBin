@@ -182,7 +182,7 @@ export default function RegisterPage() {
         setShowAlert(true);
       } else {
         // Success
-        setAlertMessage('Registration successful! Check your email for the verification link.');
+        setAlertMessage('Registration successful!');
         setAlertType('success');
         setShowAlert(true);
         
