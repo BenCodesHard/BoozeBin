@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { ScrollShadow } from "@heroui/react";
+import { ScrollShadow } from "@/components/ui/ScrollShadow";
 import supabase from "@/supabaseClient";
 
 const apiKey = process.env.NEXT_PUBLIC_UNSPLASHED_KEY;
@@ -11,30 +11,33 @@ const apiKey = process.env.NEXT_PUBLIC_UNSPLASHED_KEY;
 const fetchUnsplashImage = async (query) => {
   if (!query || query.toLowerCase().includes("undefined")) return null;
 
-  const storageKey = query.toLowerCase().trim() + "_image";
-  // Check if the image URL is already cached in localStorage
+  const normalizedQuery = query.toLowerCase().trim();
+  const storageKey = `${normalizedQuery}_image`;
   const cached = localStorage.getItem(storageKey);
-  const randomIndex = Math.floor(Math.random() * 5) + 1;
-  const keywords = ["cocktail", "drink", "beverage", "fusion"];
-  const randomKeyword = keywords[Math.floor(Math.random() * keywords.length)];
-  if (cached) {
-    return cached;
-  }
-  try {
-  const response = await fetch(
-    `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query + randomKeyword)}&client_id=${apiKey}&page=${randomIndex}`,
-  );
-  const data = await response.json();
-  const imageUrl = data.results?.[0]?.urls?.regular || null;
-  if (imageUrl){
-    localStorage.setItem(storageKey, imageUrl);
-  }
+  if (cached) return cached;
 
-  return imageUrl;
-} catch (error) {
-  console.error("Error fetching image from Unsplash:", error);
-  return null;
-}
+  const combinedQuery = `cocktail drink ${normalizedQuery}`;
+
+  try {
+    const response = await fetch(
+      `https://api.unsplash.com/search/photos?query=${encodeURIComponent(combinedQuery)}&client_id=${apiKey}&per_page=10`
+    );
+    const data = await response.json();
+    const results = data.results || [];
+
+    const randomImage = results.length
+      ? results[Math.floor(Math.random() * results.length)]?.urls?.regular
+      : null;
+
+    if (randomImage) {
+      localStorage.setItem(storageKey, randomImage);
+    }
+
+    return randomImage;
+  } catch (error) {
+    console.error("Error fetching image from Unsplash:", error);
+    return null;
+  }
 };
 
 const DrinkRecommendation = ({ drinkRecommendation, user }) => {
@@ -145,10 +148,10 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
   };
 
   return (
-    <Card className="relative bg-[#1a1a2e]/70 p-6 rounded-2xl shadow-md border border-[#2f2f4f] w-full mx-auto">
+    <Card className="relative bg-[#1a1a2e]/70 p-4 sm:p-6 rounded-2xl shadow-md border border-[#2f2f4f] w-full mx-auto animate-slideIn">
       <button
         onClick={toggleFavorite}
-        className="absolute top-4 right-4 p-1 rounded-full hover:bg-[#2f2f4f] transition-colors"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1 rounded-full hover:bg-[#2f2f4f] transition-colors"
         aria-label="Favorite"
       >
         <Heart
@@ -158,22 +161,29 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
           }
         />
       </button>
-      {/* Flex container for left (text) and right (image) */}
-      <div className="flex gap-6">
-        {/* Left side (text content) */}
+
+      {/* Flex container for content - stack on mobile, side-by-side on larger screens */}
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+        {/* Drink image - visible on all screens, positioned differently */}
+        <div className="sm:w-32 md:w-40 lg:w-48 aspect-square flex-shrink-0 rounded-lg overflow-hidden">
+          <img
+            src={imageUrl || drinkRecommendation.imageUrl || "/Cocktails_PLaceHolder.jpg"}
+            alt={drinkRecommendation.drinkName || "Drink image"}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+        
+        {/* Text content */}
         <div className="flex-1">
-          <h1 className="text-2xl font-bold text-[#e0e0ff] mb-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#e0e0ff] mb-3 sm:mb-4">
             {drinkRecommendation.drinkName || "Unnamed Drink"}
           </h1>
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-[#a0a0ff] mb-2">
+          <div className="mb-3 sm:mb-4">            <h2 className="text-base sm:text-lg font-semibold text-[#a0a0ff] mb-2">
               Ingredients:
             </h2>
             {Array.isArray(drinkRecommendation.ingredients) ? (
-              <ScrollShadow
-                size={100}
-                className="max-h-[180px] pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-              >
+              <div className="pr-2">
                 <ul className="list-disc list-inside text-[#d0d0ff] space-y-1">
                   {drinkRecommendation.ingredients.map((ingredient, index) => (
                     <li key={index} className="text-sm">
@@ -182,13 +192,13 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
                     </li>
                   ))}
                 </ul>
-              </ScrollShadow>
-            ) : (
+              </div>
+            ): (
               <p className="text-sm text-[#8080a0]">No ingredients available</p>
             )}
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#a0a0ff] mb-2">
+            <h2 className="text-base sm:text-lg font-semibold text-[#a0a0ff] mb-2">
               Instructions:
             </h2>
             <p className="text-sm text-[#d0d0ff]">
@@ -196,29 +206,97 @@ const DrinkRecommendation = ({ drinkRecommendation, user }) => {
             </p>
           </div>
         </div>
-        {/* Right side (image) */}
-        <div className="hidden lg:block w-56 h-56 mt-8 flex-shrink-0 rounded-lg overflow-hidden">
-          <img
-            src={drinkRecommendation.imageUrl || "/Cocktails_PLaceHolder.jpg"}
-            alt={drinkRecommendation.drinkName || "Drink image"}
-            className="w-full h-full object-contain"
-          />
-        </div>
       </div>
     </Card>
   );
 };
 
 const DrinkRecommendationList = ({ drinkRecommendations, user }) => {
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [isLoading, setIsLoading] = useState(false);
+  const containerRef = useRef(null);
+  const observerRef = useRef(null);
+  
+  // Function to load more items
+  const loadMoreItems = () => {
+    if (isLoading || visibleCount >= drinkRecommendations.length) return;
+    
+    setIsLoading(true);
+    // Simulate loading delay for smoother UX
+    setTimeout(() => {
+      setVisibleCount(prevCount => Math.min(prevCount + 3, drinkRecommendations.length));
+      setIsLoading(false);
+    }, 300);
+  };
+
+  // Set up intersection observer for infinite scrolling
+  useEffect(() => {
+    const options = {
+      root: null, // Use viewport as root
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMoreItems();
+      }
+    }, options);
+    
+    observerRef.current = observer;
+    
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [drinkRecommendations.length, visibleCount, isLoading]);
+  
+  // Attach observer to sentinel element when it exists
+  useEffect(() => {
+    const sentinel = document.getElementById('drink-list-sentinel');
+    if (sentinel && observerRef.current) {
+      observerRef.current.observe(sentinel);
+    }
+    
+    return () => {
+      if (sentinel && observerRef.current) {
+        observerRef.current.unobserve(sentinel);
+      }
+    };
+  }, [visibleCount, drinkRecommendations.length]);
+  
   return (
-    <div className="h-[calc(100vh-400px)] flex flex-col gap-6 p-6 bg-[#0f0f1f] max-h-[650px] overflow-y-auto rounded-xl w-full items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-      {drinkRecommendations.map((drink, index) => (
+    <div 
+      ref={containerRef}
+      className="flex flex-col gap-4 sm:gap-6 w-full"
+    >
+      {drinkRecommendations.slice(0, visibleCount).map((drink, index) => (
         <DrinkRecommendation
           key={index}
           drinkRecommendation={drink}
           user={user}
         />
       ))}
+      
+      {/* Loading indicator and sentinel element for infinite scroll */}
+      {visibleCount < drinkRecommendations.length && (
+        <div id="drink-list-sentinel" className="w-full flex justify-center py-4">
+          <div className="animate-pulse flex space-x-2">
+            <div className="h-2 w-2 bg-purple-400 rounded-full"></div>
+            <div className="h-2 w-2 bg-purple-400 rounded-full"></div>
+            <div className="h-2 w-2 bg-purple-400 rounded-full"></div>
+          </div>
+        </div>
+      )}
+      
+      {/* Empty state message */}
+      {drinkRecommendations.length === 0 && (
+        <div className="flex flex-col items-center justify-center h-40 text-center">
+          <p className="text-[#a0a0ff] mb-2">No drink recommendations available</p>
+          <p className="text-sm text-[#8080a0]">Try adding more ingredients or different combinations</p>
+        </div>
+      )}
     </div>
   );
 };
