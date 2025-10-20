@@ -1,8 +1,38 @@
-- Team Name: Team Lane 2
-- Project Name: BoozeBin
-- Team Members: Tommy Terry, Ben Sindberg, Sean Archibald, Tyler Wojtiuk
+# 🍸 BoozeBin
 
-## **Environment instructions**
+**BoozeBin** is a web app that recommends cocktail recipes based on the ingredients you have at home. Users can upload an image of their ingredients, and the app uses Google’s Gemini API to recognize them and suggest drinks accordingly.
+
+---
+
+## 👨‍💻 Team
+**Team Lane 2**  
+- Tommy Terry  
+- Ben Sindberg  
+- Sean Archibald  
+- Tyler Wojtiuk  
+
+Developed as part of a university software engineering project at **UW–Platteville**.
+
+---
+
+## ⚙️ Features
+- Ingredient detection using **Google Gemini API**
+- Cocktail image pairing via **Unsplash API**
+- User authentication and ingredient storage with **Supabase**
+- Built using **Next.js** and **React**
+- Full-stack architecture with cloud database integration
+
+---
+
+## 🧠 Tech Stack
+- **Frontend:** React, Next.js  
+- **Backend:** Supabase (PostgreSQL)  
+- **APIs:** Google Gemini, Unsplash  
+- **Languages:** JavaScript, SQL  
+
+---
+
+## **Environment instructions** - (Supabase Database was deleted from project inactivity)
 
 *very important will not work without*
 
